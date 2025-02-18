@@ -30,6 +30,7 @@ digitalWrite(dir2, LOW);
 //Setamos os pinos dos sensores como entrada
 pinMode(pin_S1, INPUT);
 pinMode(pin_S2, INPUT);
+}
 
 void loop(){
 //Neste processo armazenamos o valor lido pelo sensor na variável que armazena tais dados.
