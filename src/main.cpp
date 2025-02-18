@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-//Alterar os pinos para os utilizados
+//Alterar os pinos para os utilizados e especificar as portas da ponte H
 //Definição dos pinos de controle do motor
 #define M1 9 // Pino_Velocidade 1º Motor ( 0 a 255)_ Porta IN2 ponte H;
 #define M2 11 //Pino_Velocidade 2º Motor ( 0 a 255) _ Porta IN4 ponte H;
@@ -8,8 +8,7 @@
 #define dir2 10 //Pino_Direção do 2º Motor: Para frente / Para trás (HIGH ou LOW)_ porta IN3 ponte H;
 
 
-
-//Verificar se os sensores que estamos usando, funcionam dessa mesma forma (sao sensores ligeiramente diferentes)
+//Sensores funcionam da mesma forma, ao precisa alterar a conexao para receber a entrada digital D0 ao inves da medicao analógica A0
 //Definição dos pinos dos sensores
 #define pin_S1 7
 #define pin_S2 6
@@ -31,8 +30,6 @@ digitalWrite(dir2, LOW);
 //Setamos os pinos dos sensores como entrada
 pinMode(pin_S1, INPUT);
 pinMode(pin_S2, INPUT);
-}
-
 
 void loop(){
 //Neste processo armazenamos o valor lido pelo sensor na variável que armazena tais dados.
