@@ -7,6 +7,9 @@
 #define dir1 8 //Pino_Direção do 1º Motor: Para frente / Para trás (HIGH ou LOW)_ porta IN1 ponte H;
 #define dir2 10 //Pino_Direção do 2º Motor: Para frente / Para trás (HIGH ou LOW)_ porta IN3 ponte H;
 
+//Alterar o pino depois conforme o que for realmente usado
+//Botao de liga/desliga
+#define BT_ON_OFF 12
 
 //Sensores funcionam da mesma forma, ao precisa alterar a conexao para receber a entrada digital D0 ao inves da medicao analógica A0
 //Definição dos pinos dos sensores
@@ -16,6 +19,12 @@ bool Sensor1 = 0;
 bool Sensor2 = 0;
 //variável responsável por controlar a velocidade dos motores
 int velocidade = 150;
+
+bool on = 0;
+
+void treat_interrupt() {
+    on = 1;
+}
 
 
 void setup(){
@@ -30,23 +39,38 @@ digitalWrite(dir2, LOW);
 //Setamos os pinos dos sensores como entrada
 pinMode(pin_S1, INPUT);
 pinMode(pin_S2, INPUT);
+
+//Configuracao do botao liga/desliga
+pinMode(BT_ON_OFF, INPUT);
+
+attachInterrupt(BT_ON_OFF, treat_interrupt, RISING);
 }
+
 
 void loop(){
 //Neste processo armazenamos o valor lido pelo sensor na variável que armazena tais dados.
 Sensor1 = digitalRead(pin_S1);
 Sensor2 = digitalRead(pin_S2);
-//Aqui está toda a lógica de comportamento do robô: Para a cor branca atribuímos o valor 0 e, para a cor preta, o valor 1.
-if((Sensor1 == 0) && (Sensor2 == 0)){ // Se detectar na extremidade das faixas duas cores brancas
-analogWrite(M1, velocidade); // Ambos motores ligam na mesma velocidade
-analogWrite(M2, velocidade);
+
+//Logica do funcionamento do botao
+if(on == 1) {
+    //Aqui está toda a lógica de comportamento do robô: Para a cor branca atribuímos o valor 0 e, para a cor preta, o valor 1.
+    if((Sensor1 == 0) && (Sensor2 == 0)){ // Se detectar na extremidade das faixas duas cores brancas
+    analogWrite(M1, velocidade); // Ambos motores ligam na mesma velocidade
+    analogWrite(M2, velocidade);
+    }
+    if((Sensor1 == 1) && (Sensor2 == 0)){ // Se detectar um lado preto e o outro branco
+    analogWrite(M1, 0); // O motor 1 desliga
+    analogWrite(M2, velocidade); // O motor 2 fica ligado, fazendo assim o carrinho virar
+    }
+    if((Sensor1 == 0) && (Sensor2 == 1)){ // Se detectar um lado branco e o outro preto
+    analogWrite(M1, velocidade); //O motor 1 fica ligado
+    analogWrite(M2, 0); // O motor 2 desliga, fazendo assim o carrinho virar no outro sentido
+    }
+} else {
+    analogWrite(M1, 0);
+    analogWrite(M2, 0);
 }
-if((Sensor1 == 1) && (Sensor2 == 0)){ // Se detectar um lado preto e o outro branco
-analogWrite(M1, 0); // O motor 1 desliga
-analogWrite(M2, velocidade); // O motor 2 fica ligado, fazendo assim o carrinho virar
-}
-if((Sensor1 == 0) && (Sensor2 == 1)){ // Se detectar um lado branco e o outro preto
-analogWrite(M1, velocidade); //O motor 1 fica ligado
-analogWrite(M2, 0); // O motor 2 desliga, fazendo assim o carrinho virar no outro sentido
-}
+
+
 }
