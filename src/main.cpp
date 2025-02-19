@@ -23,7 +23,7 @@ int velocidade = 150;
 bool on = 0;
 
 void treat_interrupt() {
-    on = 1;
+    on = !on;
 }
 
 
